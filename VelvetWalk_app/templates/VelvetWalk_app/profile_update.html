@@ -1,0 +1,39 @@
+{% extends "VelvetWalk_app/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Update Profile - VelvetWalk{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Update Profile</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>User Information</h4>
+                            {{ u_form|crispy }}
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Profile Information</h4>
+                            {% if user.profile.profile_pic %}
+                            <div class="mb-3">
+                                <label class="form-label">Current Profile Picture</label>
+                                <img src="{{ user.profile.profile_pic.url }}" alt="Current Profile Picture" class="img-thumbnail" style="max-width: 150px;">
+                            </div>
+                            {% endif %}
+                            {{ p_form|crispy }}
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                        <a href="{% url 'profile' user.username %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

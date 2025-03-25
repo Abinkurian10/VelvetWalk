@@ -1,0 +1,59 @@
+{% extends "VelvetWalk_app/base.html" %}
+
+{% block title %}{{ profile.user.username }}'s Profile - VelvetWalk{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    {% if profile.profile_pic %}
+                    <img src="{{ profile.profile_pic.url }}" alt="{{ profile.user.username }}" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                    <img src="https://via.placeholder.com/150" alt="{{ profile.user.username }}" class="rounded-circle">
+                    {% endif %}
+                </div>
+                <h3 class="card-title">{{ profile.user.username }}</h3>
+                {% if profile.bio %}
+                <p class="card-text">{{ profile.bio }}</p>
+                {% endif %}
+                {% if profile.website %}
+                <a href="{{ profile.website }}" class="btn btn-outline-primary" target="_blank">Visit Website</a>
+                {% endif %}
+                {% if user == profile.user %}
+                <a href="{% url 'profile_update' %}" class="btn btn-primary mt-2">Edit Profile</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h2 class="mb-4">Posts by {{ profile.user.username }}</h2>
+        {% for post in posts %}
+        <div class="card mb-4">
+            {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.content|truncatewords:50 }}</p>
+                <p class="card-text">
+                    <small class="text-muted">
+                        Posted on {{ post.created_at|date:"F d, Y" }}
+                    </small>
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'post_detail' post.pk %}" class="btn btn-primary">Read More</a>
+                    <div>
+                        <i class="fas fa-heart {% if user in post.likes.all %}text-danger{% endif %}"></i>
+                        <span>{{ post.total_likes }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No posts yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 
